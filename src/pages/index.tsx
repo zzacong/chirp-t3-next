@@ -18,8 +18,6 @@ dayjs.extend(relativeTime);
 const CreatePostWizard = () => {
   const { user } = useUser();
 
-  console.log({ user });
-
   if (!user) return null;
 
   return (
@@ -76,7 +74,12 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <header className="z-10 flex items-center justify-end bg-white p-6 drop-shadow-md">
+      <header className="z-10 flex items-center justify-between bg-white p-6 drop-shadow-md dark:border-b dark:border-zinc-400 dark:bg-zinc-950 dark:drop-shadow-none">
+        <span>&nbsp;</span>
+        <h1 className="font-mono text-2xl font-bold uppercase text-zinc-900 dark:text-white">
+          Chirp T3
+        </h1>
+
         <SignedOut>
           <SignInButton mode="modal">
             <button className="rounded bg-black px-12 py-2 text-xl font-medium text-white hover:opacity-75">
@@ -85,14 +88,18 @@ const Home: NextPage = () => {
           </SignInButton>
         </SignedOut>
         <SignedIn>
-          <UserButton />
+          <UserButton
+            appearance={{
+              elements: {
+                userButtonAvatarBox: 'w-10 h-10',
+              },
+            }}
+          />
         </SignedIn>
       </header>
 
-      <div className="flex flex-1 justify-center bg-gradient-to-b from-white to-zinc-200 px-6">
-        <main className="w-full border-x border-zinc-400 py-6 md:max-w-3xl">
-          <h1 className="p-6 text-center text-3xl font-bold">Chirp T3</h1>
-
+      <div className="flex flex-1 justify-center bg-gradient-to-b from-white to-zinc-200 px-6 dark:from-zinc-950 dark:to-zinc-950">
+        <main className="w-full border-x border-zinc-400 pt-3 md:max-w-3xl">
           <div>
             <SignedIn>
               <CreatePostWizard />
