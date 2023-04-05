@@ -1,10 +1,72 @@
 import { type NextPage } from 'next';
-import { SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
 import Head from 'next/head';
-import { api } from '~/utils/api';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import {
+  SignInButton,
+  SignedIn,
+  SignedOut,
+  UserButton,
+  useUser,
+} from '@clerk/nextjs';
+
+import { type RouterOutputs, api } from '~/utils/api';
+import Image from 'next/image';
+
+dayjs.extend(relativeTime);
+
+const CreatePostWizard = () => {
+  const { user } = useUser();
+
+  console.log({ user });
+
+  if (!user) return null;
+
+  return (
+    <div className="flex items-center gap-3 p-6">
+      <Image
+        src={user.profileImageUrl}
+        alt="Profile picture"
+        className="rounded-full"
+        width={48}
+        height={48}
+      />
+      <input
+        type="text"
+        placeholder="Type some emojis!"
+        className="flex-grow rounded-full border-none bg-slate-200 px-8 py-3 placeholder:italic focus:bg-slate-300 focus:ring-0 hover:bg-slate-300"
+      />
+    </div>
+  );
+};
+
+type PostWithUser = RouterOutputs['posts']['getAll'][number];
+const PostView = ({ post, author }: PostWithUser) => {
+  return (
+    <li className="flex items-center gap-6 border-y border-zinc-400 p-6">
+      <Image
+        src={author.profileImageUrl}
+        alt={`${author.username}'s profile picture`}
+        className="rounded-full"
+        width={48}
+        height={48}
+      />
+      <div className="flex flex-col gap-1">
+        <div className="flex items-center gap-x-1 text-sm text-zinc-500">
+          <span className="font-medium">{`@${author.username}`}</span>
+          <span>•</span>
+          <span>{dayjs(post.createdAt).fromNow()}</span>
+        </div>
+        <p className="text-2xl">{post.content}</p>
+      </div>
+    </li>
+  );
+};
 
 const Home: NextPage = () => {
-  const { data } = api.posts.getAll.useQuery();
+  const { data, isLoading } = api.posts.getAll.useQuery();
+
+  if (isLoading) return <p>Loading...</p>;
 
   return (
     <>
@@ -14,7 +76,7 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <header className="z-10 flex items-center justify-end bg-white p-6 shadow-lg">
+      <header className="z-10 flex items-center justify-end bg-white p-6 drop-shadow-md">
         <SignedOut>
           <SignInButton mode="modal">
             <button className="rounded bg-black px-12 py-2 text-xl font-medium text-white hover:opacity-75">
@@ -27,19 +89,25 @@ const Home: NextPage = () => {
         </SignedIn>
       </header>
 
-      <main className="flex min-h-screen flex-col items-center bg-gradient-to-b from-white to-zinc-300">
-        <h1 className="my-8 text-center text-3xl font-bold">Chirp T3</h1>
+      <div className="flex flex-1 justify-center bg-gradient-to-b from-white to-zinc-200 px-6">
+        <main className="w-full border-x border-zinc-400 py-6 md:max-w-3xl">
+          <h1 className="p-6 text-center text-3xl font-bold">Chirp T3</h1>
 
-        <div>
-          <ul>
-            {data?.map(post => (
-              <li key={post.id}>
-                {post.authorId} - {post.content}
-              </li>
-            ))}
-          </ul>
-        </div>
-      </main>
+          <div>
+            <SignedIn>
+              <CreatePostWizard />
+            </SignedIn>
+          </div>
+
+          <div>
+            <ul className="flex flex-col gap-6">
+              {data?.map(row => (
+                <PostView key={row.post.id} {...row} />
+              ))}
+            </ul>
+          </div>
+        </main>
+      </div>
     </>
   );
 };
