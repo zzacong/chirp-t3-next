@@ -1,8 +1,11 @@
 import { type NextPage } from 'next';
 import { SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
 import Head from 'next/head';
+import { api } from '~/utils/api';
 
 const Home: NextPage = () => {
+  const { data } = api.posts.getAll.useQuery();
+
   return (
     <>
       <Head>
@@ -11,18 +14,30 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-white to-slate-200">
+      <header className="z-10 flex items-center justify-end bg-white p-6 shadow-lg">
+        <SignedOut>
+          <SignInButton mode="modal">
+            <button className="rounded bg-black px-12 py-2 text-xl font-medium text-white hover:opacity-75">
+              Sign in
+            </button>
+          </SignInButton>
+        </SignedOut>
+        <SignedIn>
+          <UserButton />
+        </SignedIn>
+      </header>
+
+      <main className="flex min-h-screen flex-col items-center bg-gradient-to-b from-white to-zinc-300">
+        <h1 className="my-8 text-center text-3xl font-bold">Chirp T3</h1>
+
         <div>
-          <SignedOut>
-            <SignInButton mode="modal">
-              <button className="rounded bg-black px-12 py-2 text-xl font-medium text-white hover:opacity-75">
-                Sign in
-              </button>
-            </SignInButton>
-          </SignedOut>
-          <SignedIn>
-            <UserButton />
-          </SignedIn>
+          <ul>
+            {data?.map(post => (
+              <li key={post.id}>
+                {post.authorId} - {post.content}
+              </li>
+            ))}
+          </ul>
         </div>
       </main>
     </>
