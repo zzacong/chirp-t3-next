@@ -14,6 +14,7 @@ import { type RouterOutputs, api } from '~/utils/api';
 import Image from 'next/image';
 import Spinner from '~/components/Spinner';
 import { useRef } from 'react';
+import { toast } from 'react-hot-toast';
 
 dayjs.extend(relativeTime);
 
@@ -25,6 +26,9 @@ const CreatePostWizard = () => {
     onSuccess: () => {
       form.current?.reset();
       void ctx.posts.getAll.invalidate();
+    },
+    onError() {
+      toast.error('Failed to post. Please try again later.');
     },
   });
 
