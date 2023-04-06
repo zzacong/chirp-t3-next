@@ -23,12 +23,14 @@ const CreatePostWizard = () => {
   const form = useRef<HTMLFormElement>(null);
   const ctx = api.useContext();
   const { mutate, isLoading: isPosting } = api.posts.create.useMutation({
-    onSuccess: () => {
+    onSuccess() {
       form.current?.reset();
       void ctx.posts.getAll.invalidate();
     },
-    onError() {
-      toast.error('Failed to post. Please try again later.');
+    onError(error) {
+      const message = error.data?.zodError?.fieldErrors.content;
+      if (message?.[0]) toast.error(message[0]);
+      else toast.error('Failed to post. Please try again later.');
     },
   });
 
