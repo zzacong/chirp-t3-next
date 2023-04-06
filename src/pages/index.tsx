@@ -12,6 +12,7 @@ import {
 
 import { type RouterOutputs, api } from '~/utils/api';
 import Image from 'next/image';
+import Spinner from '~/components/Spinner';
 
 dayjs.extend(relativeTime);
 
@@ -32,7 +33,7 @@ const CreatePostWizard = () => {
       <input
         type="text"
         placeholder="Type some emojis!"
-        className="flex-grow rounded-full border-none bg-slate-200 px-8 py-3 placeholder:italic focus:bg-slate-300 focus:ring-0 hover:bg-slate-300"
+        className="flex-grow rounded-full border-none bg-slate-200 px-8 py-3 placeholder:italic focus:bg-slate-300 focus:ring-0 hover:bg-slate-300 dark:bg-zinc-800 dark:placeholder:text-zinc-400 dark:hover:bg-zinc-600"
       />
     </div>
   );
@@ -61,10 +62,37 @@ const PostView = ({ post, author }: PostWithUser) => {
   );
 };
 
-const Home: NextPage = () => {
+const Feed = () => {
   const { data, isLoading } = api.posts.getAll.useQuery();
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading)
+    return (
+      <div className="fixed inset-0 grid place-items-center">
+        <Spinner size={96} />
+      </div>
+    );
+
+  if (!data)
+    return (
+      <div>
+        <p>Something went wrong</p>
+      </div>
+    );
+
+  return (
+    <div>
+      <ul className="flex flex-col gap-6">
+        {data?.map(row => (
+          <PostView key={row.post.id} {...row} />
+        ))}
+      </ul>
+    </div>
+  );
+};
+
+const Home: NextPage = () => {
+  // Start fetching asap
+  api.posts.getAll.useQuery();
 
   return (
     <>
@@ -106,13 +134,7 @@ const Home: NextPage = () => {
             </SignedIn>
           </div>
 
-          <div>
-            <ul className="flex flex-col gap-6">
-              {data?.map(row => (
-                <PostView key={row.post.id} {...row} />
-              ))}
-            </ul>
-          </div>
+          <Feed />
         </main>
       </div>
     </>
