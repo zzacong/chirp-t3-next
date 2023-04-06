@@ -13,16 +13,33 @@ import {
 import { type RouterOutputs, api } from '~/utils/api';
 import Image from 'next/image';
 import Spinner from '~/components/Spinner';
+import { useRef } from 'react';
 
 dayjs.extend(relativeTime);
 
 const CreatePostWizard = () => {
   const { user } = useUser();
+  const form = useRef<HTMLFormElement>(null);
+  const ctx = api.useContext();
+  const { mutate, isLoading: isPosting } = api.posts.create.useMutation({
+    onSuccess: () => {
+      form.current?.reset();
+      void ctx.posts.getAll.invalidate();
+    },
+  });
+
+  const onSubmit: React.FormEventHandler<HTMLFormElement> = e => {
+    e.preventDefault();
+    const form = new FormData(e.currentTarget);
+    const content = form.get('content');
+    if (typeof content !== 'string') return;
+    mutate({ content });
+  };
 
   if (!user) return null;
 
   return (
-    <div className="flex items-center gap-3 p-6">
+    <div className="flex items-center gap-3 border-b border-zinc-400 px-6 py-8">
       <Image
         src={user.profileImageUrl}
         alt="Profile picture"
@@ -30,11 +47,15 @@ const CreatePostWizard = () => {
         width={48}
         height={48}
       />
-      <input
-        type="text"
-        placeholder="Type some emojis!"
-        className="flex-grow rounded-full border-none bg-slate-200 px-8 py-3 placeholder:italic focus:bg-slate-300 focus:ring-0 hover:bg-slate-300 dark:bg-zinc-800 dark:placeholder:text-zinc-400 dark:hover:bg-zinc-600"
-      />
+      <form ref={form} onSubmit={onSubmit} className="flex-grow">
+        <input
+          type="text"
+          name="content"
+          placeholder="Type some emojis!"
+          disabled={isPosting}
+          className="w-full rounded-full border-none bg-slate-200 px-8 py-3 text-black placeholder:italic focus:bg-slate-300 focus:ring-0 hover:bg-slate-300 dark:bg-zinc-800 dark:text-white dark:placeholder:text-zinc-400 dark:focus:bg-zinc-600 dark:hover:bg-zinc-600"
+        />
+      </form>
     </div>
   );
 };
@@ -42,7 +63,7 @@ const CreatePostWizard = () => {
 type PostWithUser = RouterOutputs['posts']['getAll'][number];
 const PostView = ({ post, author }: PostWithUser) => {
   return (
-    <li className="flex items-center gap-6 border-y border-zinc-400 p-6">
+    <li className="flex items-center gap-6 border-b border-zinc-400 p-6">
       <Image
         src={author.profileImageUrl}
         alt={`${author.username}'s profile picture`}
@@ -74,15 +95,17 @@ const Feed = () => {
 
   if (!data)
     return (
-      <div>
-        <p>Something went wrong</p>
+      <div className="absolute inset-0 grid place-items-center">
+        <p className="text-xl text-black dark:text-white">
+          Something went wrong
+        </p>
       </div>
     );
 
   return (
     <div>
-      <ul className="flex flex-col gap-6">
-        {data?.map(row => (
+      <ul className="flex flex-col">
+        {data.map(row => (
           <PostView key={row.post.id} {...row} />
         ))}
       </ul>
@@ -102,32 +125,33 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <header className="z-10 flex items-center justify-between bg-white p-6 drop-shadow-md dark:border-b dark:border-zinc-400 dark:bg-zinc-950 dark:drop-shadow-none">
+      <header className="z-10 grid grid-cols-3 place-items-center bg-white p-6 drop-shadow-md dark:border-b dark:border-zinc-400 dark:bg-zinc-950 dark:drop-shadow-none">
         <span>&nbsp;</span>
-        <h1 className="font-mono text-2xl font-bold uppercase text-zinc-900 dark:text-white">
+        <h1 className="font-mono text-2xl font-bold uppercase text-black dark:text-white">
           Chirp T3
         </h1>
-
-        <SignedOut>
-          <SignInButton mode="modal">
-            <button className="rounded bg-black px-12 py-2 text-xl font-medium text-white hover:opacity-75">
-              Sign in
-            </button>
-          </SignInButton>
-        </SignedOut>
-        <SignedIn>
-          <UserButton
-            appearance={{
-              elements: {
-                userButtonAvatarBox: 'w-10 h-10',
-              },
-            }}
-          />
-        </SignedIn>
+        <div className="place-self-end">
+          <SignedOut>
+            <SignInButton mode="modal">
+              <button className="rounded bg-zinc-900 px-4 py-1 font-mono font-medium text-white hover:bg-zinc-700 dark:bg-zinc-50 dark:text-black dark:hover:bg-zinc-200">
+                Sign in
+              </button>
+            </SignInButton>
+          </SignedOut>
+          <SignedIn>
+            <UserButton
+              appearance={{
+                elements: {
+                  userButtonAvatarBox: 'w-10 h-10',
+                },
+              }}
+            />
+          </SignedIn>
+        </div>
       </header>
 
       <div className="flex flex-1 justify-center bg-gradient-to-b from-white to-zinc-200 px-6 dark:from-zinc-950 dark:to-zinc-950">
-        <main className="w-full border-x border-zinc-400 pt-3 md:max-w-3xl">
+        <main className="relative w-full border-x border-zinc-400 md:max-w-3xl">
           <div>
             <SignedIn>
               <CreatePostWizard />
