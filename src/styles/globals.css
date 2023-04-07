@@ -4,7 +4,7 @@
 
 @layer base {
   body {
-    @apply bg-white scrollbar-thin dark:bg-zinc-900;
+    @apply bg-white text-black scrollbar-thin dark:bg-zinc-900 dark:text-white;
   }
 
   #__next {

@@ -9,6 +9,7 @@ import Spinner from '~/components/Spinner';
 import { useRef } from 'react';
 import { toast } from 'react-hot-toast';
 import Link from 'next/link';
+import PageLayout from '~/components/PageLayout';
 
 dayjs.extend(relativeTime);
 
@@ -130,19 +131,15 @@ const Home: NextPage = () => {
   api.posts.getAll.useQuery();
 
   return (
-    <>
-      <div className="flex flex-1 justify-center bg-gradient-to-b from-white to-zinc-100 px-6 dark:from-zinc-950 dark:to-zinc-950">
-        <main className="relative w-full border-x border-zinc-400 md:max-w-3xl">
-          <div>
-            <SignedIn>
-              <CreatePostWizard />
-            </SignedIn>
-          </div>
-
-          <Feed />
-        </main>
+    <PageLayout>
+      <div>
+        <SignedIn>
+          <CreatePostWizard />
+        </SignedIn>
       </div>
-    </>
+
+      <Feed />
+    </PageLayout>
   );
 };
 

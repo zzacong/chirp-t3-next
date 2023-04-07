@@ -1,18 +1,66 @@
-import { type NextPage } from 'next';
+import type {
+  GetStaticPaths,
+  GetStaticProps,
+  InferGetStaticPropsType,
+  NextPage,
+} from 'next';
 import Head from 'next/head';
+import PageLayout from '~/components/PageLayout';
+import { generateSSGHelper } from '~/server/utils';
+import { api } from '~/utils/api';
 
-const ProfilePage: NextPage = () => {
+const ProfilePage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
+  username,
+}) => {
+  const { data } = api.profile.getUserByUsername.useQuery({
+    username,
+  });
+
+  if (!data)
+    return (
+      <div>
+        <p>404 User not found.</p>
+      </div>
+    );
+
   return (
     <>
       <Head>
         <title>Profile | Chirp T3</title>
       </Head>
 
-      <div className="flex flex-1 justify-center bg-gradient-to-b from-white to-zinc-100 px-6 dark:from-zinc-950 dark:to-zinc-950">
-        <main className="relative w-full border-x border-zinc-400 md:max-w-3xl"></main>
-      </div>
+      <PageLayout>
+        <h1>{data.username}</h1>
+      </PageLayout>
     </>
   );
+};
+
+export const getStaticPaths: GetStaticPaths = () => {
+  return { paths: [], fallback: 'blocking' };
+};
+
+export const getStaticProps: GetStaticProps<{
+  username: string;
+}> = async ctx => {
+  const ssg = generateSSGHelper();
+  const slug = ctx.params?.slug;
+  if (typeof slug !== 'string') {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    };
+  }
+  const username = slug.replace(/^[@]/, '');
+  await ssg.profile.getUserByUsername.prefetch({ username });
+  return {
+    props: {
+      trpcState: ssg.dehydrate(),
+      username,
+    },
+  };
 };
 
 export default ProfilePage;
