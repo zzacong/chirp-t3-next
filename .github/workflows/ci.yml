@@ -13,6 +13,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Setup pnpm
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
       - name: Install Dependencies
         run: pnpm install
 
