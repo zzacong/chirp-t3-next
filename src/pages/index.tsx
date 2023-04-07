@@ -45,11 +45,11 @@ const CreatePostWizard = () => {
   if (!user) return null;
 
   return (
-    <div className="flex items-center gap-3 border-b border-zinc-400 px-6 py-8">
+    <div className="flex items-center gap-4 border-b border-zinc-400 px-4 py-6 md:gap-6 md:px-6 md:py-8">
       <Image
         src={user.profileImageUrl}
         alt="Profile picture"
-        className="rounded-full"
+        className="h-10 w-10 rounded-full md:h-12 md:w-12"
         width={48}
         height={48}
       />
@@ -59,7 +59,7 @@ const CreatePostWizard = () => {
           name="content"
           placeholder="Type some emojis!"
           disabled={isPosting}
-          className="w-full rounded-full border-none bg-slate-200 px-8 py-3 text-black placeholder:italic focus:bg-slate-300 focus:ring-0 hover:bg-slate-300 dark:bg-zinc-800 dark:text-white dark:placeholder:text-zinc-400 dark:focus:bg-zinc-600 dark:hover:bg-zinc-600"
+          className="w-full rounded-full border-none bg-slate-200 px-6 py-2 text-zinc-800 placeholder:text-sm placeholder:italic focus:bg-slate-300 focus:ring-0 hover:bg-slate-300 dark:bg-zinc-800 dark:text-white dark:placeholder:text-zinc-400 dark:focus:bg-zinc-600 dark:hover:bg-zinc-600 md:px-8 md:py-3"
         />
       </form>
     </div>
@@ -69,11 +69,11 @@ const CreatePostWizard = () => {
 type PostWithUser = RouterOutputs['posts']['getAll'][number];
 const PostView = ({ post, author }: PostWithUser) => {
   return (
-    <li className="flex items-center gap-6 border-b border-zinc-400 p-6">
+    <li className="flex items-center gap-4 border-b border-zinc-400 p-4 md:gap-6 md:p-6">
       <Image
         src={author.profileImageUrl}
         alt={`${author.username}'s profile picture`}
-        className="rounded-full"
+        className="h-10 w-10 rounded-full md:h-12 md:w-12"
         width={48}
         height={48}
       />
@@ -83,7 +83,7 @@ const PostView = ({ post, author }: PostWithUser) => {
           <span>•</span>
           <span>{dayjs(post.createdAt).fromNow()}</span>
         </div>
-        <p className="text-2xl">{post.content}</p>
+        <p className="text-xl md:text-2xl">{post.content}</p>
       </div>
     </li>
   );
@@ -133,13 +133,13 @@ const Home: NextPage = () => {
 
       <header className="z-10 grid grid-cols-3 place-items-center bg-white p-6 drop-shadow-md dark:border-b dark:border-zinc-400 dark:bg-zinc-950 dark:drop-shadow-none">
         <span>&nbsp;</span>
-        <h1 className="font-mono text-2xl font-bold uppercase text-black dark:text-white">
+        <h1 className="font-mono text-lg font-bold uppercase text-black dark:text-white md:text-2xl">
           Chirp T3
         </h1>
         <div className="place-self-end">
           <SignedOut>
             <SignInButton mode="modal">
-              <button className="rounded bg-zinc-900 px-4 py-1 font-mono font-medium text-white hover:bg-zinc-700 dark:bg-zinc-50 dark:text-black dark:hover:bg-zinc-200">
+              <button className="rounded bg-zinc-900 px-3 py-1 font-mono text-sm font-medium text-white hover:bg-zinc-700 dark:bg-zinc-50 dark:text-black dark:hover:bg-zinc-200 md:px-4 md:text-base">
                 Sign in
               </button>
             </SignInButton>
@@ -156,7 +156,7 @@ const Home: NextPage = () => {
         </div>
       </header>
 
-      <div className="flex flex-1 justify-center bg-gradient-to-b from-white to-zinc-200 px-6 dark:from-zinc-950 dark:to-zinc-950">
+      <div className="flex flex-1 justify-center bg-gradient-to-b from-white to-zinc-100 px-6 dark:from-zinc-950 dark:to-zinc-950">
         <main className="relative w-full border-x border-zinc-400 md:max-w-3xl">
           <div>
             <SignedIn>
