@@ -4,7 +4,7 @@ import superjson from 'superjson';
 import { appRouter } from '~/server/api/root';
 import { prisma } from '~/server/db';
 
-export const filterUserForClient = (user: User) => {
+export const filterUserForClient = <const T extends User>(user: T) => {
   return {
     id: user.id,
     username: user.username,
