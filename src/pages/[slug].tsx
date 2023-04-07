@@ -63,13 +63,13 @@ const ProfilePage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
       </Head>
 
       <PageLayout>
-        <div className="relative h-28 bg-zinc-600 md:h-36">
+        <div className="relative h-28 bg-slate-400 dark:bg-zinc-600 md:h-36">
           <Image
             src={data.profileImageUrl}
             alt={`${data.username ?? ''}'s profile picture`}
             width={128}
             height={128}
-            className="absolute bottom-0 left-6 -mb-10 h-20 w-20 rounded-full border-2 border-zinc-400 bg-black md:-mb-16 md:h-32 md:w-32"
+            className="absolute bottom-0 left-6 -mb-10 h-20 w-20 rounded-full border-2 border-zinc-600 bg-black shadow dark:border-zinc-400 md:-mb-16 md:h-32 md:w-32"
           />
         </div>
         <div className="pt-8 md:pt-16"></div>
