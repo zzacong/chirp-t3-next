@@ -1,4 +1,4 @@
-const Spinner = ({
+export const Spinner = ({
   size,
   className,
 }: {
@@ -29,5 +29,3 @@ const Spinner = ({
     </div>
   );
 };
-
-export default Spinner;

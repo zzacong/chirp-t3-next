@@ -1,7 +1,7 @@
 import { SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
 import Link from 'next/link';
 
-const PageLayout = ({ children }: React.PropsWithChildren<unknown>) => {
+export const PageLayout = ({ children }: React.PropsWithChildren<unknown>) => {
   return (
     <>
       <header className="z-10 grid grid-cols-3 place-items-center bg-white px-6 py-4 drop-shadow-md dark:border-b dark:border-zinc-400 dark:bg-zinc-950 dark:drop-shadow-none md:py-6">
@@ -39,5 +39,3 @@ const PageLayout = ({ children }: React.PropsWithChildren<unknown>) => {
     </>
   );
 };
-
-export default PageLayout;

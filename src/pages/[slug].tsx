@@ -5,7 +5,8 @@ import type {
   NextPage,
 } from 'next';
 import Head from 'next/head';
-import PageLayout from '~/components/PageLayout';
+
+import { PageLayout } from '~/components/layout';
 import { generateSSGHelper } from '~/server/utils';
 import { api } from '~/utils/api';
 
@@ -26,7 +27,7 @@ const ProfilePage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
   return (
     <>
       <Head>
-        <title>Profile | Chirp T3</title>
+        <title>{data.username} | Chirp T3</title>
       </Head>
 
       <PageLayout>
