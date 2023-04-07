@@ -14,7 +14,12 @@
  *
  * These allow you to access things when processing a request, like the database, the session, etc.
  */
-import { type CreateNextContextOptions } from '@trpc/server/adapters/next';
+import { type FetchCreateContextFnOptions } from '@trpc/server/adapters/fetch';
+import { type RequestLike } from '@clerk/nextjs/dist/server/types';
+import { TRPCError, initTRPC } from '@trpc/server';
+import superjson from 'superjson';
+import { ZodError } from 'zod';
+import { getAuth } from '@clerk/nextjs/server';
 
 import { prisma } from '~/server/db';
 
@@ -24,9 +29,9 @@ import { prisma } from '~/server/db';
  *
  * @see https://trpc.io/docs/context
  */
-export const createTRPCContext = (opts: CreateNextContextOptions) => {
+export const createTRPCContext = (opts: FetchCreateContextFnOptions) => {
   const { req } = opts;
-  const { userId } = getAuth(req);
+  const { userId } = getAuth(req as RequestLike);
   return {
     prisma,
     userId: userId,
@@ -40,10 +45,6 @@ export const createTRPCContext = (opts: CreateNextContextOptions) => {
  * ZodErrors so that you get typesafety on the frontend if your procedure fails due to validation
  * errors on the backend.
  */
-import { TRPCError, initTRPC } from '@trpc/server';
-import superjson from 'superjson';
-import { ZodError } from 'zod';
-import { getAuth } from '@clerk/nextjs/server';
 
 const t = initTRPC.context<typeof createTRPCContext>().create({
   transformer: superjson,
