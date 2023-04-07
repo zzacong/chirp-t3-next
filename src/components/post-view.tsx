@@ -29,7 +29,7 @@ export const PostView = ({ post, author }: PostWithUser) => {
             <span className="font-medium">{`@${author.username}`}</span>
           </Link>
           <Link
-            href={`/post/${post.id}`}
+            href={`/posts/${post.id}`}
             className="flex items-center gap-x-1 hover:text-zinc-700 dark:hover:text-zinc-300"
           >
             <span>•</span>
