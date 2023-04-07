@@ -82,10 +82,16 @@ const PostView = ({ post, author }: PostWithUser) => {
       />
       <div className="flex flex-col gap-1">
         <div className="flex items-center gap-x-1 text-sm text-zinc-500">
-          <Link href={`/@${author.username}`}>
+          <Link
+            href={`/@${author.username}`}
+            className="hover:text-zinc-700 dark:hover:text-zinc-300"
+          >
             <span className="font-medium">{`@${author.username}`}</span>
           </Link>
-          <Link href={`/post/${post.id}`} className="flex items-center gap-x-1">
+          <Link
+            href={`/post/${post.id}`}
+            className="flex items-center gap-x-1 hover:text-zinc-700 dark:hover:text-zinc-300"
+          >
             <span>•</span>
             <span>{dayjs(post.createdAt).fromNow()}</span>
           </Link>

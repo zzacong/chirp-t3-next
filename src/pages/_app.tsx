@@ -1,13 +1,7 @@
 import { type AppType } from 'next/app';
 
 import Head from 'next/head';
-import {
-  ClerkProvider,
-  SignInButton,
-  SignedIn,
-  SignedOut,
-  UserButton,
-} from '@clerk/nextjs';
+import { ClerkProvider } from '@clerk/nextjs';
 import { Toaster } from 'react-hot-toast';
 import { api } from '~/utils/api';
 
@@ -24,32 +18,6 @@ const MyApp: AppType = ({ Component, pageProps }) => {
 
       <ClerkProvider {...pageProps}>
         <Toaster position="bottom-center" />
-
-        <header className="z-10 grid grid-cols-3 place-items-center bg-white px-6 py-4 drop-shadow-md dark:border-b dark:border-zinc-400 dark:bg-zinc-950 dark:drop-shadow-none md:py-6">
-          <span>&nbsp;</span>
-          <h1 className="font-mono text-lg font-bold uppercase text-black dark:text-white md:text-2xl">
-            Chirp T3
-          </h1>
-          <div className="place-self-end">
-            <SignedOut>
-              <SignInButton mode="modal">
-                <button className="rounded bg-zinc-900 px-3 py-1 font-mono text-sm font-medium text-white hover:bg-zinc-700 dark:bg-zinc-50 dark:text-black dark:hover:bg-zinc-200 md:px-4 md:text-base">
-                  Sign in
-                </button>
-              </SignInButton>
-            </SignedOut>
-            <SignedIn>
-              <UserButton
-                appearance={{
-                  elements: {
-                    userButtonAvatarBox: 'w-10 h-10',
-                  },
-                }}
-              />
-            </SignedIn>
-          </div>
-        </header>
-
         <Component {...pageProps} />
       </ClerkProvider>
     </>
