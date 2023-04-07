@@ -1,6 +1,12 @@
-const Spinner = ({ size }: { size?: number }) => {
+const Spinner = ({
+  size,
+  className,
+}: {
+  size?: number;
+  className?: string;
+}) => {
   return (
-    <div role="status">
+    <div role="status" className={className}>
       <svg
         aria-hidden="true"
         className="mr-2 inline animate-spin fill-gray-600 text-gray-200 dark:fill-gray-300 dark:text-gray-600"

@@ -21,10 +21,12 @@ dayjs.extend(relativeTime);
 const CreatePostWizard = () => {
   const { user } = useUser();
   const form = useRef<HTMLFormElement>(null);
+  const input = useRef<HTMLInputElement>(null);
   const ctx = api.useContext();
   const { mutate, isLoading: isPosting } = api.posts.create.useMutation({
     onSuccess() {
       form.current?.reset();
+      input.current?.focus();
       void ctx.posts.getAll.invalidate();
     },
     onError(error) {
@@ -53,14 +55,20 @@ const CreatePostWizard = () => {
         width={48}
         height={48}
       />
-      <form ref={form} onSubmit={onSubmit} className="flex-grow">
+      <form
+        ref={form}
+        onSubmit={onSubmit}
+        className="relative flex flex-grow items-center"
+      >
         <input
+          ref={input}
           type="text"
           name="content"
           placeholder="Type some emojis!"
           disabled={isPosting}
-          className="w-full rounded-full border-none bg-slate-200 px-6 py-2 text-zinc-800 placeholder:text-sm placeholder:italic focus:bg-slate-300 focus:ring-0 hover:bg-slate-300 dark:bg-zinc-800 dark:text-white dark:placeholder:text-zinc-400 dark:focus:bg-zinc-600 dark:hover:bg-zinc-600 md:px-8 md:py-3"
+          className="w-full rounded-full border-none bg-gray-200 px-6 py-2 text-lg text-zinc-800 placeholder:text-sm placeholder:italic focus:bg-transparent focus:ring-zinc-400 dark:bg-zinc-800 dark:text-white dark:placeholder:text-zinc-400 md:px-8 md:py-3"
         />
+        {isPosting && <Spinner size={24} className="absolute right-4" />}
       </form>
     </div>
   );
@@ -94,7 +102,7 @@ const Feed = () => {
 
   if (isLoading)
     return (
-      <div className="fixed inset-0 grid place-items-center">
+      <div className="absolute inset-0 grid place-items-center">
         <Spinner size={96} />
       </div>
     );
@@ -131,7 +139,7 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <header className="z-10 grid grid-cols-3 place-items-center bg-white p-6 drop-shadow-md dark:border-b dark:border-zinc-400 dark:bg-zinc-950 dark:drop-shadow-none">
+      <header className="z-10 grid grid-cols-3 place-items-center bg-white px-6 py-4 drop-shadow-md dark:border-b dark:border-zinc-400 dark:bg-zinc-950 dark:drop-shadow-none md:py-6">
         <span>&nbsp;</span>
         <h1 className="font-mono text-lg font-bold uppercase text-black dark:text-white md:text-2xl">
           Chirp T3
