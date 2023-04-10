@@ -15,13 +15,13 @@
  * These allow you to access things when processing a request, like the database, the session, etc.
  */
 import { type FetchCreateContextFnOptions } from '@trpc/server/adapters/fetch';
-import { type RequestLike } from '@clerk/nextjs/dist/server/types';
+import { type NextRequest } from 'next/server';
 import { TRPCError, initTRPC } from '@trpc/server';
 import superjson from 'superjson';
 import { ZodError } from 'zod';
 import { getAuth } from '@clerk/nextjs/server';
 
-import { prisma } from '~/server/db';
+import { db } from '~/server/db';
 
 /**
  * This is the actual context you will use in your router. It will be used to process every request
@@ -31,10 +31,10 @@ import { prisma } from '~/server/db';
  */
 export const createTRPCContext = (opts: FetchCreateContextFnOptions) => {
   const { req } = opts;
-  const { userId } = getAuth(req as RequestLike);
+  const { userId } = getAuth(req as NextRequest);
   return {
-    prisma,
-    userId: userId,
+    db,
+    userId,
   };
 };
 
