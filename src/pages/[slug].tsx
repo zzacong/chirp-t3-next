@@ -59,7 +59,7 @@ const ProfilePage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
   return (
     <>
       <Head>
-        <title>{data.username} | Chirp T3</title>
+        <title>{data.username} | Chirp T3 @ Edge</title>
       </Head>
 
       <PageLayout>

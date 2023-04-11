@@ -29,7 +29,7 @@ const SinglePostPage: NextPage<
     <>
       <Head>
         <title>
-          {`${data.post.content} - @${data.author.username}`} | Chirp T3
+          {`${data.post.content} - @${data.author.username}`} | Chirp T3 @ Edge
         </title>
       </Head>
 
