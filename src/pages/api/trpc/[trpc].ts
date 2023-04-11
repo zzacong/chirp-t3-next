@@ -6,6 +6,7 @@ import { appRouter } from '~/server/api/root';
 
 export const config = {
   runtime: 'edge',
+  region: 'syd1',
 };
 
 // export API handler
