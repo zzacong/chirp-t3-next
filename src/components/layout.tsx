@@ -4,13 +4,13 @@ import Link from 'next/link';
 export const PageLayout = ({ children }: React.PropsWithChildren<unknown>) => {
   return (
     <>
-      <header className="z-10 grid grid-cols-3 place-items-center bg-white px-6 py-4 drop-shadow-md dark:border-b dark:border-zinc-400 dark:bg-zinc-950 dark:drop-shadow-none md:py-6">
+      <header className="z-10 grid grid-cols-4 place-items-center bg-white px-6 py-4 drop-shadow-md dark:border-b dark:border-zinc-400 dark:bg-zinc-950 dark:drop-shadow-none md:py-6">
         <span>&nbsp;</span>
         <Link
           href="/"
-          className="font-mono text-lg font-bold uppercase text-black dark:text-white md:text-2xl"
+          className="col-span-2 font-mono text-lg font-bold uppercase text-black dark:text-white md:text-2xl"
         >
-          Chirp T3
+          Chirp T3 @ the Edge
         </Link>
         <div className="place-self-end">
           <SignedOut>
